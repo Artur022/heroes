@@ -32,14 +32,13 @@ export class HeroService {
     // return heroes
   }
 
-    handleError<T>(operation = 'operation', result ? : T)
-    {
-      return (error: any): Observable<T> => {
-        console.error(error)
-        this.log(`${operation} failed: ${error.message}`)
-        return of(result as T)
-      }
+  handleError<T>(operation = 'operation', result ?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error)
+      this.log(`${operation} failed: ${error.message}`)
+      return of(result as T)
     }
+  }
 
   private log(message: string) {
     this.messageService.add(`HeroService: ${message}`);
@@ -81,5 +80,18 @@ export class HeroService {
     )
   }
 
+  searchHeroes(term: string): Observable<Hero[]> {
+    if (!term.trim()) {
+      return of([])
+    }
+    console.log(term)
+    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+      tap(x => x.length ?
+        this.log(`found heroes matching "${term}"`) :
+        this.log(`no heroes matching "${term}"`)),
+      catchError(this.handleError<Hero[]>('searchHeroes', []))
+    )
+
+  }
 
 }
