@@ -10,7 +10,8 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 })
 export class HeroService {
 
-  private heroesUrl = 'api/heroes';
+  private heroes = []
+  private heroesUrl = 'http://127.0.0.1:5000/api/heroes';
   httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
   }
@@ -85,7 +86,7 @@ export class HeroService {
       return of([])
     }
     console.log(term)
-    return this.http.get<Hero[]>(`${this.heroesUrl}/?name=${term}`).pipe(
+    return this.http.get<Hero[]>(`${this.heroesUrl}?name=${term}`).pipe(
       tap(x => x.length ?
         this.log(`found heroes matching "${term}"`) :
         this.log(`no heroes matching "${term}"`)),

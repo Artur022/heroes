@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Hero} from "../hero";
+import {HeroService} from "../hero.service";
 
 @Component({
   selector: 'app-hero-form',
@@ -8,6 +9,7 @@ import {Hero} from "../hero";
 })
 export class HeroFormComponent implements OnInit {
 
+
   powers = [
     'Really Smart',
     'Super Flexible',
@@ -15,11 +17,17 @@ export class HeroFormComponent implements OnInit {
     'Weather Changer'
   ];
 
-  model = new Hero(18, 'Dr. IQ', this.powers[0], 'Chuck Overstreet')
+
+  constructor(private heroService: HeroService) {
+  }
+
+  model = new Hero(0, '', this.powers[0], '')
   submitted = false
 
   onSubmit() {
     this.submitted = true
+    console.log(this)
+    this.heroService.addHero(this.model).subscribe(model => this.model = model)
   }
 
 
@@ -37,9 +45,10 @@ export class HeroFormComponent implements OnInit {
 
   }
 
-  newHero(): Hero {
-    return {id: 1, name: '123'}
-  }
+  // newHero(): Hero {
+  //   console.log(this)
+  //   return {id: 1, name: '123'}
+  // }
 
 
 }
